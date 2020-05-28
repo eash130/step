@@ -4,10 +4,6 @@
   width: 750px;
 }
 
-#greeting-container {
-  margin-top: 20px;
-}
-
 #game-list {
   display: flex;
   justify-content: space-between;
