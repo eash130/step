@@ -15,14 +15,23 @@
 /**
  * Adds a random greeting to the page.
  */
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
+function addRandomQuote() {
+  const quotes =
+      ['I\'m ready!',
+       'The best time to wear a striped sweater is all the time.',
+       'Krusty Krab Pizza, it\'s the pizza for you and me!',
+       'Is mayonnaise an instrument?',
+       'The inner machinations of my mind are an enigma.',
+       'My leg!',
+       'Do you smell it? That smell. A kind of smelly smell. The smelly smell that smells... smelly',
+       'Once there was an ugly barnacle. He was so ugly that everyone died. The end!',
+       'I knew I shouldn\'t have gotten out of bed today.',
+       'The pioneers used to ride these babies for miles!'];
 
   // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+  const quote = quotes[Math.floor(Math.random() * quotes.length)];
 
   // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+  const spongebobContainer = document.getElementById('spongebob-container');
+  spongebobContainer.innerText = quote;
 }
