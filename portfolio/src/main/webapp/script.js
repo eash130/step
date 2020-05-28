@@ -17,9 +17,12 @@
  */
 function addRandomQuote() {
   const quotes =
-      ['I\'m ready!', 'The best time to wear a striped sweater is all the time.',
-       'Krusty Krab Pizza, it\'s the pizza for you and me!', 'Is mayonnaise an instrument?',
-       'The inner machinations of my mind are an enigma.', 'My leg!',
+      ['I\'m ready!',
+       'The best time to wear a striped sweater is all the time.',
+       'Krusty Krab Pizza, it\'s the pizza for you and me!',
+       'Is mayonnaise an instrument?',
+       'The inner machinations of my mind are an enigma.',
+       'My leg!',
        'Do you smell it? That smell. A kind of smelly smell. The smelly smell that smells... smelly',
        'Once there was an ugly barnacle. He was so ugly that everyone died. The end!',
        'I knew I shouldn\'t have gotten out of bed today.',
