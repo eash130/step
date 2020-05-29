@@ -39,3 +39,26 @@
   background-color: whitesmoke;
   visibility: visible;
 }
+
+#spongebob-container {
+  position: relative;
+  width: 50%;
+  height: 125px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+#bubbles {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  top: 100%;
+}
+
+#quote-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

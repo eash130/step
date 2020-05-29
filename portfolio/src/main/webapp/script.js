@@ -32,6 +32,29 @@ function addRandomQuote() {
   const quote = quotes[Math.floor(Math.random() * quotes.length)];
 
   // Add it to the page.
-  const spongebobContainer = document.getElementById('spongebob-container');
-  spongebobContainer.innerText = quote;
+  const spongebobContainer = document.getElementById('quote-container');
+
+  let bubblesImg = document.getElementById('bubbles');
+  let i = 1;
+  function bubbleLoop() {
+    setTimeout(function() {
+      let percentage = Math.abs(5 * (i - 20));
+      if (bubblesImg.style.top === '0%' || bubblesImg.style.top === 'auto') {
+        bubblesImg.style.bottom = '' + percentage + '%';
+        bubblesImg.style.top = 'auto';
+      } else {
+        bubblesImg.style.top = '' + percentage + '%';
+      }
+      if (i === 20) {
+        spongebobContainer.innerText = quote;
+      }
+      i++;
+      if (i < 41) {
+        bubbleLoop();
+      }
+    }, 13);
+  }
+  bubbleLoop();
+  bubblesImg.style.top = '100%';
+  bubblesImg.style.bottom = '';
 }
