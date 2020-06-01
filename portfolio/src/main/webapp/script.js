@@ -38,9 +38,10 @@ function addRandomQuote() {
   let currentIteration = 1;
 
   // Creates a bubble effect that transitions between quote displays.
-  // There is a delay of 13 ms between iterations to make the animation smooth.
+  // There is a delay between iterations to make the animation smooth.
   function bubbleLoop() {
     const numIterations = 40;
+    const delay = 13;
     setTimeout(function() {
       // Calculates a percentage based on the cu
       let percentage = Math.abs((100 / (numIterations / 2)) * (currentIteration - numIterations / 2));
@@ -57,7 +58,7 @@ function addRandomQuote() {
       if (currentIteration < numIterations + 1) {
         bubbleLoop();
       }
-    }, 13);
+    }, delay);
   }
   bubbleLoop();
   bubblesImg.style.top = '100%';
