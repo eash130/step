@@ -32,6 +32,35 @@ function addRandomQuote() {
   const quote = quotes[Math.floor(Math.random() * quotes.length)];
 
   // Add it to the page.
-  const spongebobContainer = document.getElementById('spongebob-container');
-  spongebobContainer.innerText = quote;
+  const spongebobContainer = document.getElementById('quote-container');
+
+  let bubblesImg = document.getElementById('bubbles');
+  let currentIteration = 1;
+
+  // Creates a bubble effect that transitions between quote displays.
+  // There is a delay between iterations to make the animation smooth.
+  function bubbleLoop() {
+    const numIterations = 40;
+    const delay = 13;
+    setTimeout(function() {
+      // Calculates a percentage based on the cu
+      let percentage = Math.abs((100 / (numIterations / 2)) * (currentIteration - numIterations / 2));
+      if (bubblesImg.style.top === '0%' || bubblesImg.style.top === 'auto') {
+        bubblesImg.style.bottom = '' + percentage + '%';
+        bubblesImg.style.top = 'auto';
+      } else {
+        bubblesImg.style.top = '' + percentage + '%';
+      }
+      if (currentIteration === numIterations / 2) {
+        spongebobContainer.innerText = quote;
+      }
+      currentIteration++;
+      if (currentIteration < numIterations + 1) {
+        bubbleLoop();
+      }
+    }, delay);
+  }
+  bubbleLoop();
+  bubblesImg.style.top = '100%';
+  bubblesImg.style.bottom = '';
 }
