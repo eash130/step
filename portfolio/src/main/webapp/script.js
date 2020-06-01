@@ -35,21 +35,26 @@ function addRandomQuote() {
   const spongebobContainer = document.getElementById('quote-container');
 
   let bubblesImg = document.getElementById('bubbles');
-  let i = 1;
+  let currentIteration = 1;
+
+  // Creates a bubble effect that transitions between quote displays.
+  // There is a delay of 13 ms between iterations to make the animation smooth.
   function bubbleLoop() {
+    const numIterations = 40;
     setTimeout(function() {
-      let percentage = Math.abs(5 * (i - 20));
+      // Calculates a percentage based on the cu
+      let percentage = Math.abs((100 / (numIterations / 2)) * (currentIteration - numIterations / 2));
       if (bubblesImg.style.top === '0%' || bubblesImg.style.top === 'auto') {
         bubblesImg.style.bottom = '' + percentage + '%';
         bubblesImg.style.top = 'auto';
       } else {
         bubblesImg.style.top = '' + percentage + '%';
       }
-      if (i === 20) {
+      if (currentIteration === numIterations / 2) {
         spongebobContainer.innerText = quote;
       }
-      i++;
-      if (i < 41) {
+      currentIteration++;
+      if (currentIteration < numIterations + 1) {
         bubbleLoop();
       }
     }, 13);
