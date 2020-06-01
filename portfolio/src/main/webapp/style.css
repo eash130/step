@@ -4,35 +4,37 @@
   width: 750px;
 }
 
+/* Video Game Display */
+
 #game-list {
   display: flex;
   justify-content: space-between;
 }
 
 .game {
+  float: left;
+  height: 125px;
+  margin-bottom: 10px;
   position: relative;
   width: 125px;
-  height: 125px;
-  float: left;
-  margin-bottom: 10px;
 }
 
 .game img {
-  width: 100%;
   height: 100%;
+  width: 100%;
 }
 
 .game div {
-  position: absolute;
-  display: flex;
   align-items: center;
-  justify-content: center;
-  width: 100%;
+  color: black;
+  display: flex;
   height: 100%;
+  justify-content: center;
+  opacity: .85;
+  position: absolute;
   top: 0%;
   visibility: hidden;
-  opacity: 0.85;
-  color: black;
+  width: 100%;
 }
 
 .game:hover div {
@@ -40,25 +42,27 @@
   visibility: visible;
 }
 
+/* Spongebob Quotes */
+
 #spongebob-container {
+  align-items: center;
+  display: flex;
+  height: 125px;
+  justify-content: center;
+  overflow: hidden;
   position: relative;
   width: 50%;
-  height: 125px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
 }
 
 #bubbles {
-  width: 100%;
   height: auto;
   position: absolute;
   top: 100%;
+  width: 100%;
 }
 
 #quote-container {
-  display: flex;
   align-items: center;
+  display: flex;
   justify-content: center;
 }
