@@ -68,3 +68,20 @@ function addRandomQuote() {
 function greetBack() {
   fetch('/data').then(response => response.text()).then(response => document.getElementById('greeting-response').innerHTML = response);
 }
+
+function fetchJson() {
+  fetch('/data').then(response => response.json()).then(messages => {
+    const commentSection = document.getElementById('comment-list');
+    commentSection.appendChild(createListElement(messages.firstMessage));
+    commentSection.appendChild(createListElement(messages.secondMessage));
+    commentSection.appendChild(createListElement(messages.thirdMessage));
+    commentSection.appendChild(createListElement(messages.fourthMessage));
+  })
+}
+
+/** Creates an <li> element containing text. */
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
+}

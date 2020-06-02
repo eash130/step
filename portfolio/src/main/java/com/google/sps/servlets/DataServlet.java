@@ -15,6 +15,7 @@
 package com.google.sps.servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,9 +25,23 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
+  private ArrayList<String> jsonValues;
+
+  @Override
+  public void init() {
+    jsonValues = new ArrayList();
+    jsonValues.add("This is the first message!");
+    jsonValues.add("Let's add another one!");
+    jsonValues.add("Well three's a crowd");
+    jsonValues.add("They said three was fine, but what's wrong with four.");
+  }
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("text/html;");
-    response.getWriter().println("<h1>Hello Eashan!</h1>");
+    String convertedJson = String.format("{\"firstMessage\": \"%s\", \"secondMessage\": \"%s\", " +
+                                         "\"thirdMessage\": \"%s\", \"fourthMessage\": \"%s\"}",
+                                         jsonValues.get(0), jsonValues.get(1), jsonValues.get(2), jsonValues.get(3));
+    response.setContentType("application/json;");
+    response.getWriter().println(convertedJson);
   }
 }
