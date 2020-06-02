@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
-  <body onload=fetchJson()>
+  <body onload=fetchComments()>
     <div id="content">
       <h1>My Portfolio</h1>
       <p>Hello! My name is Eashan.</p>
@@ -72,6 +72,14 @@
         <div id="quote-container"></div>
       </div>
       <ol id="comment-list"></ol>
+      <form action="/data" method="POST">
+        <label for="comment">Enter your comment:</label>
+        <br>
+        <input type="text" id="comment" name="comment">
+        <br>
+        <br>
+        <input type="submit" value="Post Comment">
+      </form>
     </div>
   </body>
 </html>

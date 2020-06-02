@@ -26,22 +26,22 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private ArrayList<String> allMessages;
-
-  @Override
-  public void init() {
-    allMessages = new ArrayList();
-    allMessages.add("This is the first message!");
-    allMessages.add("Let's add another one!");
-    allMessages.add("Well three's a crowd");
-    allMessages.add("They said three was fine, but what's wrong with four.");
-  }
+  private ArrayList<String> messages = new ArrayList();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Gson gson = new Gson();
-    String jsonMessages = gson.toJson(allMessages);
-    response.setContentType("application/json;");
+    String jsonMessages = gson.toJson(messages);
+    response.setContentType("application/json");
     response.getWriter().println(jsonMessages);
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String newComment = request.getParameter("comment");
+    if (!newComment.isEmpty()) {
+      messages.add(newComment);
+    }
+    response.sendRedirect("/");
   }
 }
