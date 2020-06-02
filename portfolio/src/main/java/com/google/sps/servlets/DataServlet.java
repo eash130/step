@@ -40,7 +40,8 @@ public class DataServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String convertedJson = String.format("{\"firstMessage\": \"%s\", \"secondMessage\": \"%s\", " +
                                          "\"thirdMessage\": \"%s\", \"fourthMessage\": \"%s\"}",
-                                         jsonValues.get(0), jsonValues.get(1), jsonValues.get(2), jsonValues.get(3));
+                                         jsonValues.get(0), jsonValues.get(1), jsonValues.get(2),
+                                         jsonValues.get(3));
     response.setContentType("application/json;");
     response.getWriter().println(convertedJson);
   }
