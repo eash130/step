@@ -14,6 +14,7 @@
 
 package com.google.sps.servlets;
 
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.servlet.annotation.WebServlet;
@@ -38,10 +39,8 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String jsonMessages = String.format("{\"firstMessage\": \"%s\", \"secondMessage\": \"%s\", " +
-                                        "\"thirdMessage\": \"%s\", \"fourthMessage\": \"%s\"}",
-                                        allMessages.get(0), allMessages.get(1), allMessages.get(2),
-                                        allMessages.get(3));
+    Gson gson = new Gson();
+    String jsonMessages = gson.toJson(allMessages);
     response.setContentType("application/json;");
     response.getWriter().println(jsonMessages);
   }

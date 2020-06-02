@@ -72,10 +72,7 @@ function greetBack() {
 function fetchJson() {
   fetch('/data').then(response => response.json()).then(messages => {
     const commentSection = document.getElementById('comment-list');
-    commentSection.appendChild(createListElement(messages.firstMessage));
-    commentSection.appendChild(createListElement(messages.secondMessage));
-    commentSection.appendChild(createListElement(messages.thirdMessage));
-    commentSection.appendChild(createListElement(messages.fourthMessage));
+    messages.forEach(message => commentSection.appendChild(createListElement(message)));
   })
 }
 
