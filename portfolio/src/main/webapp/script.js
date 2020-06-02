@@ -64,3 +64,7 @@ function addRandomQuote() {
   bubblesImg.style.top = '100%';
   bubblesImg.style.bottom = '';
 }
+
+function greetBack() {
+  fetch('/data').then(response => response.text()).then(response => document.getElementById('greeting-response').innerHTML = response);
+}
