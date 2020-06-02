@@ -25,24 +25,24 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private ArrayList<String> jsonValues;
+  private ArrayList<String> allMessages;
 
   @Override
   public void init() {
-    jsonValues = new ArrayList();
-    jsonValues.add("This is the first message!");
-    jsonValues.add("Let's add another one!");
-    jsonValues.add("Well three's a crowd");
-    jsonValues.add("They said three was fine, but what's wrong with four.");
+    allMessages = new ArrayList();
+    allMessages.add("This is the first message!");
+    allMessages.add("Let's add another one!");
+    allMessages.add("Well three's a crowd");
+    allMessages.add("They said three was fine, but what's wrong with four.");
   }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String convertedJson = String.format("{\"firstMessage\": \"%s\", \"secondMessage\": \"%s\", " +
-                                         "\"thirdMessage\": \"%s\", \"fourthMessage\": \"%s\"}",
-                                         jsonValues.get(0), jsonValues.get(1), jsonValues.get(2),
-                                         jsonValues.get(3));
+    String jsonMessages = String.format("{\"firstMessage\": \"%s\", \"secondMessage\": \"%s\", " +
+                                        "\"thirdMessage\": \"%s\", \"fourthMessage\": \"%s\"}",
+                                        allMessages.get(0), allMessages.get(1), allMessages.get(2),
+                                        allMessages.get(3));
     response.setContentType("application/json;");
-    response.getWriter().println(convertedJson);
+    response.getWriter().println(jsonMessages);
   }
 }
