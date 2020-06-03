@@ -14,6 +14,12 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,10 +32,19 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private ArrayList<String> messages = new ArrayList();
+  private static final String TASK_NAME = "Comments";
+  private static final String TIMESTAMP = "timestamp";
+  private static final String COMMENT_PROPERTY = "comment";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    Query commentsQuery = new Query(TASK_NAME).addSort(TIMESTAMP, SortDirection.ASCENDING);
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery commentResults = datastore.prepare(commentsQuery);
+    ArrayList<String> messages = new ArrayList();
+    for (Entity commentEntity : commentResults.asIterable()) {
+      messages.add((String) commentEntity.getProperty(COMMENT_PROPERTY));
+    }
     Gson gson = new Gson();
     String jsonMessages = gson.toJson(messages);
     response.setContentType("application/json");
@@ -38,9 +53,14 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String newComment = request.getParameter("comment");
+    String newComment = request.getParameter(COMMENT_PROPERTY);
+    long timestamp = System.currentTimeMillis();
     if (!newComment.isEmpty()) {
-      messages.add(newComment);
+      Entity commentEntity = new Entity(TASK_NAME);
+      commentEntity.setProperty(COMMENT_PROPERTY, newComment);
+      commentEntity.setProperty(TIMESTAMP, timestamp);
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      datastore.put(commentEntity);
     }
     response.sendRedirect("/");
   }
