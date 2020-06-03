@@ -32,9 +32,11 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
+  static final String taskName = "Comments";
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query commentsQuery = new Query("Comments");
+    Query commentsQuery = new Query(taskName).addSort("timestamp", SortDirection.ASCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery commentResults = datastore.prepare(commentsQuery);
     ArrayList<String> messages = new ArrayList();
@@ -50,9 +52,11 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String newComment = request.getParameter("comment");
+    long timestamp = System.currentTimeMillis();
     if (!newComment.isEmpty()) {
-      Entity commentEntity = new Entity("Comments");
+      Entity commentEntity = new Entity(taskName);
       commentEntity.setProperty("comment", newComment);
+      commentEntity.setProperty("timestamp", timestamp);
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       datastore.put(commentEntity);
     }
