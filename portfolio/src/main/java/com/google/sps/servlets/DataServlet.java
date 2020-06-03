@@ -32,16 +32,18 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  static final String taskName = "Comments";
+  private static final String TASK_NAME = "Comments";
+  private static final String TIMESTAMP = "timestamp";
+  private static final String COMMENT_PROPERTY = "comment";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query commentsQuery = new Query(taskName).addSort("timestamp", SortDirection.ASCENDING);
+    Query commentsQuery = new Query(TASK_NAME).addSort(TIMESTAMP, SortDirection.ASCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery commentResults = datastore.prepare(commentsQuery);
     ArrayList<String> messages = new ArrayList();
     for (Entity commentEntity : commentResults.asIterable()) {
-      messages.add((String) commentEntity.getProperty("comment"));
+      messages.add((String) commentEntity.getProperty(COMMENT_PROPERTY));
     }
     Gson gson = new Gson();
     String jsonMessages = gson.toJson(messages);
@@ -51,12 +53,12 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String newComment = request.getParameter("comment");
+    String newComment = request.getParameter(COMMENT_PROPERTY);
     long timestamp = System.currentTimeMillis();
     if (!newComment.isEmpty()) {
-      Entity commentEntity = new Entity(taskName);
-      commentEntity.setProperty("comment", newComment);
-      commentEntity.setProperty("timestamp", timestamp);
+      Entity commentEntity = new Entity(TASK_NAME);
+      commentEntity.setProperty(COMMENT_PROPERTY, newComment);
+      commentEntity.setProperty(TIMESTAMP, timestamp);
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       datastore.put(commentEntity);
     }
