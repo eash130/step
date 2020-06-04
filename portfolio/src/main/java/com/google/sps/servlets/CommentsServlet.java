@@ -17,47 +17,46 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
-@WebServlet("/data")
-public class DataServlet extends HttpServlet {
+@WebServlet("/comments")
+public class CommentsServlet extends HttpServlet {
 
   private static final String TASK_NAME = "Comments";
   private static final String TIMESTAMP = "timestamp";
   private static final String COMMENT_PROPERTY = "comment";
-  private static final String FILTER_PARAM = "filterCount";
+  private static final String PAGE_SIZE = "filterCount";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String filterCount = request.getParameter(FILTER_PARAM);
+    String pageSize = request.getParameter(PAGE_SIZE);
     int filterQuantity;
-    if (filterCount == null) {
+    if (pageSize == null) {
       // Default filter is 25 comments per page.
       filterQuantity = 25;
     } else {
-      filterQuantity = Integer.parseInt(filterCount);
+      filterQuantity = Integer.parseInt(pageSize);
     }
     Query commentsQuery = new Query(TASK_NAME).addSort(TIMESTAMP, SortDirection.ASCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery commentResults = datastore.prepare(commentsQuery);
+    List<Entity> requestedComments = commentResults.asList(
+        FetchOptions.Builder.withLimit(filterQuantity));
     ArrayList<String> messages = new ArrayList();
-    int commentCount = 0;
-    for (Entity commentEntity : commentResults.asIterable()) {
+    for (Entity commentEntity : requestedComments) {
       messages.add((String) commentEntity.getProperty(COMMENT_PROPERTY));
-      commentCount++;
-      if (commentCount == filterQuantity) {
-        break;
-      }
     }
     Gson gson = new Gson();
     String jsonMessages = gson.toJson(messages);
