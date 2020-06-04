@@ -35,15 +35,29 @@ public class DataServlet extends HttpServlet {
   private static final String TASK_NAME = "Comments";
   private static final String TIMESTAMP = "timestamp";
   private static final String COMMENT_PROPERTY = "comment";
+  private static final String FILTER_PARAM = "filterCount";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String filterCount = request.getParameter(FILTER_PARAM);
+    int filterQuantity;
+    if (filterCount == null) {
+      // Default filter is 25 comments per page.
+      filterQuantity = 25;
+    } else {
+      filterQuantity = Integer.parseInt(filterCount);
+    }
     Query commentsQuery = new Query(TASK_NAME).addSort(TIMESTAMP, SortDirection.ASCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery commentResults = datastore.prepare(commentsQuery);
     ArrayList<String> messages = new ArrayList();
+    int commentCount = 0;
     for (Entity commentEntity : commentResults.asIterable()) {
       messages.add((String) commentEntity.getProperty(COMMENT_PROPERTY));
+      commentCount++;
+      if (commentCount == filterQuantity) {
+        break;
+      }
     }
     Gson gson = new Gson();
     String jsonMessages = gson.toJson(messages);

@@ -82,3 +82,14 @@ function createListElement(text) {
   liElement.innerText = text;
   return liElement;
 }
+
+function filterComments() {
+  const filterCount = document.getElementById('filter').value;
+  let fetchLink = '/data?filterCount=' + filterCount;
+  fetch(fetchLink).then(response => response.json()).then(messages => {
+    const commentSection = document.getElementById('comment-list');
+    // Clear current comments and re-add with appropriate filter.
+    commentSection.innerHTML = '';
+    messages.forEach(message => commentSection.appendChild(createListElement(message)));
+  })
+}
