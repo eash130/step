@@ -72,8 +72,16 @@
         <div id="quote-container"></div>
       </div>
       <h2>Comments</h2>
+      <p>Showing 
+      <select id="filter" onchange="filterComments()">
+        <option value=10>10</option>
+        <option value=25 selected>25</option>
+        <option value=50>50</option>
+        <option value=100>100</option>
+      </select>
+      comments on this page.</p>
       <ol id="comment-list"></ol>
-      <form action="/data" method="POST">
+      <form action="/comments" method="POST">
         <label for="comment">Enter your comment:</label>
         <br>
         <input type="text" id="comment" name="comment">

@@ -70,7 +70,7 @@ function greetBack() {
 }
 
 function fetchComments() {
-  fetch('/data').then(response => response.json()).then(messages => {
+  fetch('/comments').then(response => response.json()).then(messages => {
     const commentSection = document.getElementById('comment-list');
     messages.forEach(message => commentSection.appendChild(createListElement(message)));
   })
@@ -81,4 +81,15 @@ function createListElement(text) {
   const liElement = document.createElement('li');
   liElement.innerText = text;
   return liElement;
+}
+
+function filterComments() {
+  const filterCount = document.getElementById('filter').value;
+  let fetchLink = '/comments?filterCount=' + filterCount;
+  fetch(fetchLink).then(response => response.json()).then(messages => {
+    const commentSection = document.getElementById('comment-list');
+    // Clear current comments and re-add with appropriate filter.
+    commentSection.innerHTML = '';
+    messages.forEach(message => commentSection.appendChild(createListElement(message)));
+  })
 }
