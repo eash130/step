@@ -18,10 +18,13 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
+import com.google.sps.data.Comment;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +33,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+/** Servlet that displays and update comments on the web page. */
 @WebServlet("/comments")
 public class CommentsServlet extends HttpServlet {
 
@@ -38,6 +41,7 @@ public class CommentsServlet extends HttpServlet {
   private static final String TIMESTAMP = "timestamp";
   private static final String COMMENT_PROPERTY = "comment";
   private static final String PAGE_SIZE = "filterCount";
+  private static final String COMMENT_ID = "commentId";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -54,9 +58,13 @@ public class CommentsServlet extends HttpServlet {
     PreparedQuery commentResults = datastore.prepare(commentsQuery);
     List<Entity> requestedComments = commentResults.asList(
         FetchOptions.Builder.withLimit(filterQuantity));
-    ArrayList<String> messages = new ArrayList();
+    ArrayList<Comment> messages = new ArrayList();
     for (Entity commentEntity : requestedComments) {
-      messages.add((String) commentEntity.getProperty(COMMENT_PROPERTY));
+      long commentId = commentEntity.getKey().getId();
+      String message = (String) commentEntity.getProperty(COMMENT_PROPERTY);
+      long timestamp = (long) commentEntity.getProperty(TIMESTAMP);
+      Comment newComment = new Comment(commentId, message, timestamp);
+      messages.add(newComment);
     }
     Gson gson = new Gson();
     String jsonMessages = gson.toJson(messages);
@@ -75,6 +83,15 @@ public class CommentsServlet extends HttpServlet {
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       datastore.put(commentEntity);
     }
+    response.sendRedirect("/");
+  }
+
+  @Override
+  public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    long commentId = Long.parseLong(request.getParameter(COMMENT_ID));
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    Key commentKey = KeyFactory.createKey(TASK_NAME, commentId);
+    datastore.delete(commentKey);
     response.sendRedirect("/");
   }
 }
