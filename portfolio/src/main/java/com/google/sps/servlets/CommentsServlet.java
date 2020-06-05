@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that displays and update comments on the web page. */
+/** Servlet that displays comments on the web page. */
 @WebServlet("/comments")
 public class CommentsServlet extends HttpServlet {
 

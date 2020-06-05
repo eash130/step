@@ -49,6 +49,7 @@ public class CommentServlet extends HttpServlet {
 
   @Override
   public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // request.getPathInfo() returns "/${id}" and substring(1) would return "${id}" without "/".
     long commentId = Long.parseLong(request.getPathInfo().substring(1));
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Key commentKey = KeyFactory.createKey(TASK_NAME, commentId);

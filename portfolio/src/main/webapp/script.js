@@ -85,8 +85,8 @@ function filterComments() {
     const commentSection = document.getElementById('comment-list');
     // Clear current comments and re-add with appropriate filter.
     commentSection.innerHTML = '';
-    messages.forEach(message => commentSection.appendChild(createComment(message.message,
-        message.commentId)));
+    messages.forEach(message => commentSection.appendChild(
+        createComment(message.message, message.commentId)));
   });
 }
 
