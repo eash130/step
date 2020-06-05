@@ -18,8 +18,6 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -41,7 +39,6 @@ public class CommentsServlet extends HttpServlet {
   private static final String TIMESTAMP = "timestamp";
   private static final String COMMENT_PROPERTY = "comment";
   private static final String PAGE_SIZE = "filterCount";
-  private static final String COMMENT_ID = "commentId";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -70,28 +67,5 @@ public class CommentsServlet extends HttpServlet {
     String jsonMessages = gson.toJson(messages);
     response.setContentType("application/json");
     response.getWriter().println(jsonMessages);
-  }
-
-  @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String newComment = request.getParameter(COMMENT_PROPERTY);
-    long timestamp = System.currentTimeMillis();
-    if (!newComment.isEmpty()) {
-      Entity commentEntity = new Entity(TASK_NAME);
-      commentEntity.setProperty(COMMENT_PROPERTY, newComment);
-      commentEntity.setProperty(TIMESTAMP, timestamp);
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      datastore.put(commentEntity);
-    }
-    response.sendRedirect("/");
-  }
-
-  @Override
-  public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    long commentId = Long.parseLong(request.getParameter(COMMENT_ID));
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Key commentKey = KeyFactory.createKey(TASK_NAME, commentId);
-    datastore.delete(commentKey);
-    response.sendRedirect("/");
   }
 }

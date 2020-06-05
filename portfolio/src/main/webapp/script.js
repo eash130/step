@@ -91,7 +91,8 @@ function filterComments() {
 }
 
 function deleteComment(id) {
-  fetch('/comments?commentId=' + id, {method: 'DELETE'});
+  fetch('/comment/' + id, {method: 'DELETE'});
+  location.reload();
 }
 
 /** Creates a comment. */
