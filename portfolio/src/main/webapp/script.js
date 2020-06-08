@@ -72,15 +72,10 @@ function greetBack() {
 function fetchComments() {
   fetch('/comments').then(response => response.json()).then(messages => {
     const commentSection = document.getElementById('comment-list');
-    messages.forEach(message => commentSection.appendChild(createListElement(message)));
-  })
-}
-
-/** Creates an <li> element containing text. */
-function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  return liElement;
+    messages.forEach(message => {
+      commentSection.appendChild(createComment(message.message, message.commentId));
+    });
+  });
 }
 
 function filterComments() {
@@ -90,6 +85,40 @@ function filterComments() {
     const commentSection = document.getElementById('comment-list');
     // Clear current comments and re-add with appropriate filter.
     commentSection.innerHTML = '';
-    messages.forEach(message => commentSection.appendChild(createListElement(message)));
-  })
+    messages.forEach(message => commentSection.appendChild(
+        createComment(message.message, message.commentId)));
+  });
+}
+
+function deleteComment(id) {
+  fetch('/comment/' + id, {method: 'DELETE'});
+  location.reload();
+}
+
+/** Creates a comment. */
+function createComment(text, id) {
+  const message = createListElement(text);
+  const deleteButton = createTrashIcon(id);
+  message.appendChild(deleteButton);
+  return message;
+}
+
+/** Creates an <li> element containing text. */
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  liElement.style.display = 'flex';
+  return liElement;
+}
+
+/** Creates an <img> element for deleting comments. */
+function createTrashIcon(id) {
+  const imgElement = document.createElement('img');
+  imgElement.src = '/images/trash.png';
+  imgElement.alt = 'Delete';
+  imgElement.id = id;
+  imgElement.onclick = function() { deleteComment(id); };
+  imgElement.style.width = '25px';
+  imgElement.style.height = '25px';
+  return imgElement;
 }
