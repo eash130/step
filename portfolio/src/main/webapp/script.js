@@ -35,27 +35,28 @@ function addRandomQuote() {
   const spongebobContainer = document.getElementById('quote-container');
 
   let bubblesImg = document.getElementById('bubbles');
-  let currentIteration = 1;
+  let currentFrame = 1;
 
   // Creates a bubble effect that transitions between quote displays.
-  // There is a delay between iterations to make the animation smooth.
+  // There is a delay of 10ms between iterations to make the animation smooth.
   function bubbleLoop() {
-    const numIterations = 40;
-    const delay = 13;
+    const numFrames = 40;
+    const delay = 10;
     setTimeout(function() {
       // Calculates a percentage based on the cu
-      let percentage = Math.abs((100 / (numIterations / 2)) * (currentIteration - numIterations / 2));
+      let percentage = Math.abs(
+          (100 / (numFrames / 2)) * (currentFrame - numFrames / 2));
       if (bubblesImg.style.top === '0%' || bubblesImg.style.top === 'auto') {
         bubblesImg.style.bottom = '' + percentage + '%';
         bubblesImg.style.top = 'auto';
       } else {
         bubblesImg.style.top = '' + percentage + '%';
       }
-      if (currentIteration === numIterations / 2) {
+      if (currentFrame === numFrames / 2) {
         spongebobContainer.innerText = quote;
       }
-      currentIteration++;
-      if (currentIteration < numIterations + 1) {
+      currentFrame++;
+      if (currentFrame < numFrames + 1) {
         bubbleLoop();
       }
     }, delay);
@@ -63,10 +64,6 @@ function addRandomQuote() {
   bubbleLoop();
   bubblesImg.style.top = '100%';
   bubblesImg.style.bottom = '';
-}
-
-function greetBack() {
-  fetch('/data').then(response => response.text()).then(response => document.getElementById('greeting-response').innerHTML = response);
 }
 
 function fetchComments() {
