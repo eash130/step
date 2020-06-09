@@ -73,6 +73,7 @@ function fetchComments() {
       commentSection.appendChild(
           createComment(message.message, message.commentId));
     });
+    getLoginStatus();
   });
 }
 
@@ -119,4 +120,29 @@ function createTrashIcon(id) {
   imgElement.style.width = '25px';
   imgElement.style.height = '25px';
   return imgElement;
+}
+
+function getLoginStatus() {
+  fetch("/login").then(response => response.json()).then(authInfo => {
+    console.log(authInfo);
+    const commentForm = document.getElementById('comment-form');
+    const loginMessage = document.getElementById('login-message');
+    const loginURL = document.getElementById('login-URL');
+    const logoutURL = document.getElementById('logout-URL');
+    if (authInfo.email === "") {
+      // If the user is not logged in, then prevent the user from posting a
+      // comment until they are logged in.
+      commentForm.style.display = 'none';
+      loginMessage.style.display = 'block';
+      loginURL.href = authInfo.authenticationURL;
+      logoutURL.style.display = 'none';
+    } else {
+      // If the user is logged in, display the comment submission form and
+      // present a link to log out.
+      commentForm.style.display = 'block';
+      loginMessage.style.display = 'none';
+      logoutURL.style.display = 'block';
+      logoutURL.href = authInfo.authenticationURL;
+    }
+  });
 }

@@ -79,14 +79,18 @@
       </select>
       comments on this page.</p>
       <ol id="comment-list"></ol>
-      <form action="/comment" method="POST">
+      <form id="comment-form" style="display: none" action="/comment" method="POST">
         <label for="comment">Enter your comment:</label>
         <br>
         <input type="text" id="comment" name="comment">
         <br>
         <br>
         <input type="submit" value="Post Comment">
+        <br>
+        <br>
       </form>
+      <p id="login-message" style="color: red">You must be logged in to post a comment! <a id="login-URL">Login here!</a></p>
+      <a id="logout-URL" style="display: none">Log out</a>
     </div>
   </body>
 </html>
