@@ -73,7 +73,8 @@ function fetchComments() {
   fetch('/comments').then(response => response.json()).then(messages => {
     const commentSection = document.getElementById('comment-list');
     messages.forEach(message => {
-      commentSection.appendChild(createComment(message.message, message.commentId));
+      commentSection.appendChild(
+          createComment(message.email, message.message, message.commentId));
     });
     getLoginStatus();
   });
@@ -87,7 +88,7 @@ function filterComments() {
     // Clear current comments and re-add with appropriate filter.
     commentSection.innerHTML = '';
     messages.forEach(message => commentSection.appendChild(
-        createComment(message.message, message.commentId)));
+        createComment(message.email, message.message, message.commentId)));
   });
 }
 
@@ -97,17 +98,17 @@ function deleteComment(id) {
 }
 
 /** Creates a comment. */
-function createComment(text, id) {
-  const message = createListElement(text);
+function createComment(email, text, id) {
+  const message = createListElement(email, text);
   const deleteButton = createTrashIcon(id);
   message.appendChild(deleteButton);
   return message;
 }
 
 /** Creates an <li> element containing text. */
-function createListElement(text) {
+function createListElement(email, text) {
   const liElement = document.createElement('li');
-  liElement.innerText = text;
+  liElement.innerText = email + ' says ' + text;
   liElement.style.display = 'flex';
   return liElement;
 }

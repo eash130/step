@@ -19,6 +19,8 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -32,6 +34,7 @@ public class CommentServlet extends HttpServlet {
   private static final String TASK_NAME = "Comments";
   private static final String TIMESTAMP = "timestamp";
   private static final String COMMENT_PROPERTY = "comment";
+  private static final String USER_IDENTIFIER = "userEmail";
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -41,6 +44,8 @@ public class CommentServlet extends HttpServlet {
       Entity commentEntity = new Entity(TASK_NAME);
       commentEntity.setProperty(COMMENT_PROPERTY, newComment);
       commentEntity.setProperty(TIMESTAMP, timestamp);
+      UserService userService = UserServiceFactory.getUserService();
+      commentEntity.setProperty(USER_IDENTIFIER, userService.getCurrentUser().getEmail());
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       datastore.put(commentEntity);
     }
