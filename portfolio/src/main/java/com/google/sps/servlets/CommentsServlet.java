@@ -39,6 +39,7 @@ public class CommentsServlet extends HttpServlet {
   private static final String TIMESTAMP = "timestamp";
   private static final String COMMENT_PROPERTY = "comment";
   private static final String PAGE_SIZE = "filterCount";
+  private static final String USER_IDENTIFIER = "userEmail";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -60,7 +61,8 @@ public class CommentsServlet extends HttpServlet {
       long commentId = commentEntity.getKey().getId();
       String message = (String) commentEntity.getProperty(COMMENT_PROPERTY);
       long timestamp = (long) commentEntity.getProperty(TIMESTAMP);
-      Comment newComment = new Comment(commentId, message, timestamp);
+      String email = (String) commentEntity.getProperty(USER_IDENTIFIER);
+      Comment newComment = new Comment(commentId, message, timestamp, email);
       messages.add(newComment);
     }
     Gson gson = new Gson();
