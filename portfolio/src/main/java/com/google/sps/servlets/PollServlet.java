@@ -14,6 +14,13 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.HashMap;
@@ -27,31 +34,55 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/poll")
 public class PollServlet extends HttpServlet {
 
+  private static final String TASK_NAME = "Polls";
   private static final String POLL_NAME = "pollName";
   private static final String POLL_RESPONSE = "pollResponse";
-  private Map<String, Map<String, Integer>> polls = new HashMap<>();
+  private static final String VOTE_COUNT = "voteCount";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Map<String, Integer> poll = polls.get(request.getParameter(POLL_NAME));
+    String pollName = request.getParameter(POLL_NAME);
+    Query pollQuery = new Query(TASK_NAME)
+        .setFilter(new FilterPredicate(POLL_NAME, FilterOperator.EQUAL, pollName));
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery pollResults = datastore.prepare(pollQuery);
+    Map<String, Long> pollData = new HashMap<>();
+    for (Entity pollEntity: pollResults.asIterable()) {
+      String vote = (String) pollEntity.getProperty(POLL_RESPONSE);
+      long count = (long) pollEntity.getProperty(VOTE_COUNT);
+      pollData.put(vote, count);
+    }
     Gson gson = new Gson();
-    String json = gson.toJson(poll);
+    String json = gson.toJson(pollData);
     response.setContentType("application/json");
     response.getWriter().println(json);
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Map<String, Integer> poll = polls.get(request.getParameter(POLL_NAME));
-    if (poll == null) {
-      poll = new HashMap<>();
-      polls.put(request.getParameter(POLL_NAME), poll);
+    String pollName = request.getParameter(POLL_NAME);
+    String pollResponse = request.getParameter(POLL_RESPONSE).toLowerCase();
+
+    // Attempt to retrieve the (poll name + poll response) combination from datastore and increment
+    // the vote count.
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    Query query = new Query(TASK_NAME)
+        .setFilter(new FilterPredicate(POLL_NAME, FilterOperator.EQUAL, pollName))
+        .setFilter(new FilterPredicate(POLL_RESPONSE, FilterOperator.EQUAL, pollResponse));
+    PreparedQuery pollRow = datastore.prepare(query);
+    Entity datastoreEntity = pollRow.asSingleEntity();
+    if (datastoreEntity == null) {
+      Entity pollEntity = new Entity(TASK_NAME);
+      pollEntity.setProperty(POLL_NAME, pollName);
+      pollEntity.setProperty(POLL_RESPONSE, pollResponse);
+      pollEntity.setProperty(VOTE_COUNT, 1);
+      datastore.put(pollEntity);
+    } else {
+      long currentCount = (long) datastoreEntity.getProperty(VOTE_COUNT);
+      datastoreEntity.setProperty(VOTE_COUNT, currentCount + 1);
+      datastore.put(datastoreEntity);
     }
-    String pollResponse = request.getParameter(POLL_RESPONSE);
-    if (!pollResponse.isEmpty()) {
-      int currentVotes = poll.containsKey(pollResponse) ? poll.get(pollResponse) : 0;
-      poll.put(pollResponse, currentVotes + 1);
-    }
+    
     response.sendRedirect("/");
   }
 }
