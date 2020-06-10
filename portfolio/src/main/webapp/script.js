@@ -124,7 +124,6 @@ function createTrashIcon(id) {
 
 function getLoginStatus() {
   fetch("/login").then(response => response.json()).then(authInfo => {
-    console.log(authInfo);
     const commentForm = document.getElementById('comment-form');
     const loginMessage = document.getElementById('login-message');
     const loginURL = document.getElementById('login-URL');
@@ -145,4 +144,28 @@ function getLoginStatus() {
       logoutURL.href = authInfo.authenticationURL;
     }
   });
+}
+
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawPetChart);
+
+function drawPetChart() {
+  fetch('/poll?pollName=pets').then(results => results.json()).then(petVotes => {
+    const data = new google.visualization.DataTable();
+    data.addColumn('string', 'Pet');
+    data.addColumn('number', 'Votes');
+    Object.keys(petVotes).forEach(pet => {
+      data.addRow([pet, petVotes[pet]]);
+    });
+    
+    const options = {
+      'title': 'Favorite Pets',
+      'width': 500,
+      'height': 500
+    };
+
+    const chart = new google.visualization.PieChart(
+        document.getElementById('pet-poll'));
+    chart.draw(data, options);
+  })
 }
