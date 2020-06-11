@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>My Portfolio</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="script.js"></script>
   </head>
   <body onload=fetchComments()>
@@ -91,6 +92,17 @@
       </form>
       <p id="login-message" style="color: red">You must be logged in to post a comment! <a id="login-URL">Login here!</a></p>
       <a id="logout-URL" style="display: none">Log out</a>
+      <br>
+      <h2>Polls</h2>
+      <form action="/poll?pollName=pets" method="POST">
+        <label for="pollResponse">What is your favorite pet?</label>
+        <br>
+        <input type="text" id="pollResponse" name="pollResponse">
+        <br>
+        <br>
+        <input type="submit" value="Vote">
+      </form>
+      <div id="pet-poll"></div>
     </div>
   </body>
 </html>
