@@ -28,11 +28,13 @@ public final class FindMeetingQuery {
     Collection<String> meetingAttendees = request.getAttendees();
     long meetingDuration = request.getDuration();
     
+    // If there are no required attendees, then the meeting can be held at any time of the day.
     if (meetingAttendees.isEmpty()) {
       meetingTimes.add(TimeRange.WHOLE_DAY);
       return meetingTimes;
     }
 
+    // If the meeting lasts longer than the day, then there are no meeting time slots available.
     if (meetingDuration > TimeRange.WHOLE_DAY.duration()) {
       return meetingTimes;
     }
