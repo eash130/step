@@ -79,26 +79,35 @@ public final class FindMeetingQuery {
       int timeSlotEnd = time.end();
       if (timeSlotStart < eventStart && timeSlotEnd > eventEnd) {
         // Handles the case of when an event is entirely within a time slot.
+        //
+        // Time Slot : |-------------|
+        // Event     :       |--A--|
+        // New Slot  : |-----|     |-|
         newMeetingTimes.add(TimeRange.fromStartEnd(timeSlotStart, eventStart, false));
         newMeetingTimes.add(TimeRange.fromStartEnd(eventEnd, timeSlotEnd, false));
 
-      } else if (timeSlotStart < eventStart && timeSlotEnd > eventStart) {
+      } else if (timeSlotStart < eventStart &&
+                 (timeSlotEnd > eventStart || timeSlotEnd == eventEnd)) {
         // Handles the case of when an event starts within the time slot,
         // but ends after the time slots end time.
+        //
+        // Time Slot : |-------------|
+        // Event     :        |----A----|
+        // New Slot  : |------|
         newMeetingTimes.add(TimeRange.fromStartEnd(timeSlotStart, eventStart, false));
 
-      } else if (timeSlotStart < eventEnd && timeSlotEnd > eventEnd) {
-        // Handles the case of when an event ends after the time slot,
+      } else if ((timeSlotStart < eventEnd || timeSlotStart == eventStart) &&
+                 timeSlotEnd > eventEnd) {
+        // Handles the case of when an event ends after the time slot starts,
         // but starts before the time slot ends.
+        //
+        // Time Slot :   |-------------|
+        // Event     : |----A----|
+        // New Slot  :           |-----|
         newMeetingTimes.add(TimeRange.fromStartEnd(eventEnd, timeSlotEnd, false));
-
-      } else if (timeSlotStart == eventStart && timeSlotEnd > eventEnd) {
-        newMeetingTimes.add(TimeRange.fromStartEnd(eventEnd, timeSlotEnd, false));
-
-      } else if (timeSlotStart < eventStart && timeSlotEnd == eventEnd) {
-        newMeetingTimes.add(TimeRange.fromStartEnd(timeSlotStart, eventStart, false));
 
       } else {
+        // If none of the conditions are met, then there is no need to change the time slot.
         newMeetingTimes.add(time);
       }
     }
